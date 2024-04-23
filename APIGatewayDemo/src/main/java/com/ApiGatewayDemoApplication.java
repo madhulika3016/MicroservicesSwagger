@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-//@EnableEurekaClient
 public class ApiGatewayDemoApplication {
 
 	public static void main(String[] args) {

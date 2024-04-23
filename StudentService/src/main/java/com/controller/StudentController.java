@@ -132,7 +132,7 @@ public class StudentController {
 			  
 			  // then get Book for Student
 			  
-	 Book book = restTemplate.getForObject("http://BOOK-SERVICE/apibook/getBook/"+id,Book.class); 
+	 Book book = restTemplate.getForObject("http://localhost:8082/apibook/apibook/getBook/"+id,Book.class); 
 			  requiredResponse.setBook(book); 
 			  return new ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK); }
 			 
