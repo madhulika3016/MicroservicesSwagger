@@ -21,6 +21,8 @@ import com.entity.RequiredResponse;
 import com.entity.Student;
 import com.service.StudentService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 @RequestMapping("/apistudent")
 public class StudentController {
@@ -135,6 +137,7 @@ public class StudentController {
 			 * ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK); }
 			 */
 	
+	  @CircuitBreaker(name = "STUDENT-SERVICE", fallbackMethod = "getStudents")
 	  @GetMapping("/getAllBook")
 		public List<Book> getBooks(){
 		  List<Book> lbooks=bookRestConsumer.getBooks();
