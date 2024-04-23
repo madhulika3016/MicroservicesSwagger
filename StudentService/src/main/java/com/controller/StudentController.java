@@ -123,8 +123,8 @@ public class StudentController {
 			/*
 			 * @GetMapping(path = "/id/{id}") public ResponseEntity<RequiredResponse>
 			 * getAllDadaBasedonCenterId(@PathVariable Integer id) throws Throwable{
-			 * RequiredResponse requiredResponse = new RequiredResponse(); //1st get
-			 * vaccination center detail Student s1 = Studentservice.getStudentById(id);
+			 * RequiredResponse requiredResponse = new RequiredResponse(); 
+			 Student s1 = Studentservice.getStudentById(id);
 			 * requiredResponse.setStudent(s1);
 			 * 
 			 * // then get Book for Student
