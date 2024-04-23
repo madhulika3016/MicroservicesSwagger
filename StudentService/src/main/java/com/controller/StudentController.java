@@ -30,13 +30,14 @@ public class StudentController {
 	@Autowired
 	StudentService Studentservice;
 	
-	//@Autowired
-	//RestTemplate restTemplate;
+	@Autowired
+	RestTemplate restTemplate;
 	
 	//Logger logger= System.getLogger("loger");
 	
 	@Autowired
 	BookRestConsumer bookRestConsumer;
+
 	
 	@RequestMapping("/Hello")
 	public String helloStudent()
@@ -122,22 +123,21 @@ public class StudentController {
 		  return re; 
 		  }
 	  
-			/*
-			 * @GetMapping(path = "/id/{id}") public ResponseEntity<RequiredResponse>
-			 * getAllDadaBasedonCenterId(@PathVariable Integer id) throws Throwable{
-			 * RequiredResponse requiredResponse = new RequiredResponse(); 
+			
+ @GetMapping(path = "/id/{id}") public ResponseEntity<RequiredResponse> 
+ getAllDadaBasedonCenterId(@PathVariable Integer id) throws Throwable{
+			  RequiredResponse requiredResponse = new RequiredResponse(); 
 			 Student s1 = Studentservice.getStudentById(id);
-			 * requiredResponse.setStudent(s1);
-			 * 
-			 * // then get Book for Student
-			 * 
-			 * Book book =
-			 * restTemplate.getForObject("http://BOOK-SERVICE/apibook/getBook/"+id,
-			 * Book.class); requiredResponse.setBook(book); return new
-			 * ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK); }
-			 */
+			  requiredResponse.setStudent(s1);
+			  
+			  // then get Book for Student
+			  
+	 Book book = restTemplate.getForObject("http://BOOK-SERVICE/apibook/getBook/"+id,Book.class); 
+			  requiredResponse.setBook(book); 
+			  return new ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK); }
+			 
 	
-	  @CircuitBreaker(name = "STUDENT-SERVICE", fallbackMethod = "getStudents")
+	 // @CircuitBreaker(name = "STUDENT-SERVICE", fallbackMethod = "getStudents")
 	  @GetMapping("/getAllBook")
 		public List<Book> getBooks(){
 		  List<Book> lbooks=bookRestConsumer.getBooks();
