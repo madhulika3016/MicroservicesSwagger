@@ -12,5 +12,4 @@ public interface BookRestConsumer {
 	@GetMapping("/getBooks")
 	public List<Book> getBooks();
 	
-
 }
