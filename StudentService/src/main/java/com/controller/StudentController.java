@@ -50,7 +50,7 @@ public class StudentController {
 	public ResponseEntity<Student> addStudent(@RequestBody Student c)
 	{
 		Studentservice.addStudent(c);
-		ResponseEntity re=new ResponseEntity<Student>(c,HttpStatus.OK);
+		ResponseEntity<Student> re=new ResponseEntity<Student>(c,HttpStatus.OK);
 		return re;
 	}
 	
@@ -58,7 +58,7 @@ public class StudentController {
 	public ResponseEntity<List<Student>> getStudents()
 	{
 		List<Student> lc1=Studentservice.getStudents();
-		ResponseEntity re=new ResponseEntity<List<Student>>(lc1,HttpStatus.OK);
+		ResponseEntity<List<Student>> re=new ResponseEntity<List<Student>>(lc1,HttpStatus.OK);
 		return re;
 	}
 	
@@ -67,7 +67,7 @@ public class StudentController {
 	{
 		Student c1=Studentservice.getStudentById(cid);
 		
-		ResponseEntity re=new ResponseEntity<Student>(c1,HttpStatus.OK);
+		ResponseEntity<Student> re=new ResponseEntity<Student>(c1,HttpStatus.OK);
 		return re;
 	}
 	
@@ -76,7 +76,7 @@ public class StudentController {
 	{
 		List<Student> le=Studentservice.addStudents(ls);
 		
-		ResponseEntity re=new ResponseEntity<List<Student>>(le,HttpStatus.OK);
+		ResponseEntity<List<Student>> re=new ResponseEntity<List<Student>>(le,HttpStatus.OK);
 		return re;
 	}
 	
@@ -85,7 +85,7 @@ public class StudentController {
 	{
 		Student e1=Studentservice.updateStudent(e);
 		
-		ResponseEntity re=new ResponseEntity<Student>(e1,HttpStatus.OK);
+		ResponseEntity<Student> re=new ResponseEntity<Student>(e1,HttpStatus.OK);
 		return re;
 	}
 	
@@ -94,7 +94,7 @@ public class StudentController {
 	{
 		Studentservice.deleteStudent(e);
 		
-		ResponseEntity re=new ResponseEntity<String>("Deleted",HttpStatus.OK);
+		ResponseEntity<String> re=new ResponseEntity<String>("Deleted",HttpStatus.OK);
 		return re;
 	}
 	
@@ -103,7 +103,7 @@ public class StudentController {
 	{
 		Studentservice.deleteStudentById(eid);
 		
-		ResponseEntity re=new ResponseEntity<String>("Deleted",HttpStatus.OK);
+		ResponseEntity<String> re=new ResponseEntity<String>("Deleted",HttpStatus.OK);
 		return re;
 	}
 	
@@ -124,8 +124,9 @@ public class StudentController {
 		  }
 	  
 			
- @GetMapping(path = "/id/{id}") public ResponseEntity<RequiredResponse> 
- getAllDadaBasedonCenterId(@PathVariable Integer id) throws Throwable{
+ @GetMapping(path = "/id/{id}") 
+ @CircuitBreaker(fallbackMethod = "getDataFallBack", name = "BOOK-SERVICE")
+ public ResponseEntity<RequiredResponse>    getAllDadaBasedonStudentId(@PathVariable Integer id) throws Throwable{
 			  RequiredResponse requiredResponse = new RequiredResponse(); 
 			 Student s1 = Studentservice.getStudentById(id);
 			  requiredResponse.setStudent(s1);
@@ -135,9 +136,16 @@ public class StudentController {
 	 Book book = restTemplate.getForObject("http://localhost:8082/apibook/apibook/getBook/"+id,Book.class); 
 			  requiredResponse.setBook(book); 
 			  return new ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK); }
-			 
+			
+ 
+ public ResponseEntity<RequiredResponse>    getDataFallBack(@PathVariable Integer id,RuntimeException e) throws Throwable{
+	  RequiredResponse requiredResponse = new RequiredResponse(); 
+	 Student s1 = Studentservice.getStudentById(id);
+	 requiredResponse.setStudent(s1);
+	 return new ResponseEntity<RequiredResponse>(requiredResponse, HttpStatus.OK);
+ }
 	
-	 // @CircuitBreaker(name = "STUDENT-SERVICE", fallbackMethod = "getStudents")
+	 //@CircuitBreaker(name = "STUDENT-SERVICE", fallbackMethod = "getDataFallBack")
 	  @GetMapping("/getAllBook")
 		public List<Book> getBooks(){
 		  List<Book> lbooks=bookRestConsumer.getBooks();
